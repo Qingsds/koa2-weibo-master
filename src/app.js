@@ -31,10 +31,11 @@ app.use(views(__dirname + '/views', {
   extension: 'ejs'
 }))
 
+// session 配置
 app.keys = ['IXss_1213#']
 app.use(session({
   key: 'weibo.sid', //cookie name 默认是 `koa.sid`
-  prefix: 'weibo:sess', //redis key 默认是 `koa:sess`
+  prefix: 'weibo.sess:', //redis key 默认是 `koa:sess`
   cookie: {
     path: '/',
     httpOnly: true,
