@@ -35,8 +35,8 @@ async function getUserInfo(userName, password) {
 
 /**
  * 创建用户信息
- * @param {string} userName 
- * @param {string} password 
+ * @param {string} userName
+ * @param {string} password
  * @param {number} gender 性别 1 男 2 女 3 保密
  * @param {string} nickName 昵称
  */
@@ -45,9 +45,24 @@ async function createUser({ userName, password, gender = 3, nickName }) {
         userName,
         password,
         nickName: nickName ? nickName : userName,
-        gender
+        gender,
     })
     return result.dataValues
 }
 
-module.exports = { getUserInfo ,createUser}
+/**
+ * 删除用户
+ * @param {string} userName 
+ * @returns  number
+ */
+async function deleteUser(userName) {
+    const result = await User.destroy({
+        where: {
+            userName,
+        },
+    })
+    // result 返回删除的行数
+    return result > 0
+}
+
+module.exports = { getUserInfo, createUser,deleteUser }
