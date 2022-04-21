@@ -7,6 +7,7 @@ const {
     registerUserNameNotExistInfo,
     registerUserNameIsExistInfo,
     registerFailInfo,
+    loginFailInfo,
 } = require("../model/errorInfo")
 const { ErrorModel, SuccessModel } = require("../model/ResModel")
 const { getUserInfo, createUser } = require("../services/user")
@@ -50,7 +51,26 @@ async function register({ userName, password, gender }) {
     }
 }
 
+/**
+ * login
+ * @param {Object} ctx 上下文,用于 session
+ * @param {string} userName
+ * @param {string} password
+ */
+async function login({ ctx, userName, password }) {
+    const userInfo = await getUserInfo(userName, doCrypto(password))
+    if (!userInfo) {
+        return new ErrorModel(loginFailInfo)
+    }
+    // 处理 session
+    if (!ctx.session || !ctx.session.userInfo) {
+        ctx.session.userInfo = userInfo
+    }
+    return new SuccessModel()
+}
+
 module.exports = {
     isExist,
     register,
+    login,
 }

@@ -3,7 +3,7 @@
  * @author qingsds
  */
 
-const { isExist, register } = require("../../controller/user")
+const { isExist, register, login } = require("../../controller/user")
 const generateValidator = require("../../middlewares/validator")
 const userValidate = require("../../validator/User")
 
@@ -20,6 +20,12 @@ router.post("/register", generateValidator(userValidate), async (ctx, next) => {
 router.post("/isExist", async (ctx, next) => {
     const { userName } = ctx.request.body
     ctx.body = await isExist(userName)
+})
+
+// 用户登录
+router.post("/login", async (ctx, next) => {
+    const { userName, password } = ctx.request.body
+    ctx.body = await login({ ctx, userName, password })
 })
 
 module.exports = router
