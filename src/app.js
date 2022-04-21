@@ -14,6 +14,7 @@ const { isProd } = require("./utils/env")
 const userAPIRouter = require("./routes/api/user")
 const userViewRouter = require("./routes/view/user")
 const errorViewRouter = require("./routes/view/error")
+const indexRouter = require("./routes/view/index")
 const { SESSION_SECRET_KEY } = require("./conf/secret-keys")
 
 // error handler
@@ -59,6 +60,7 @@ app.use(
 )
 
 // routes
+app.use(indexRouter.routes(), indexRouter.allowedMethods())
 app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
 app.use(userAPIRouter.routes(), userAPIRouter.allowedMethods())
 // 404路由注册到最下面
