@@ -1,11 +1,16 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>EJS Welcome to <%= title %></p>
-  </body>
-</html>
+<%- include('layout/header.ejs', { title: '微博 - 首页', isNav: true , list:
+true, isInputBlog: true})%>
+
+<div class="container margin-top-20">
+    <div class="row">
+        <!-- 左侧 -->
+        <div class="col-8">
+            <!-- 输入框 -->
+            <%- include('widgets/input') %>
+        </div>
+        <!-- 右侧 -->
+        <div class="col-4">右侧</div>
+    </div>
+</div>
+
+<%- include('layout/footer.ejs')%>
