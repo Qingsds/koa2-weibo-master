@@ -9,9 +9,16 @@ const {
     registerFailInfo,
     loginFailInfo,
     deleteUserFailInfo,
+    changeInfoFailInfo,
 } = require("../model/errorInfo")
 const { ErrorModel, SuccessModel } = require("../model/ResModel")
-const { getUserInfo, createUser, deleteUser } = require("../services/user")
+const {
+    getUserInfo,
+    createUser,
+    deleteUser,
+    update,
+    updateUser,
+} = require("../services/user")
 const { doCrypto } = require("../utils/cryp")
 
 /**
@@ -82,9 +89,42 @@ async function deleteCurrentUser(userName) {
     return new ErrorModel(deleteUserFailInfo)
 }
 
+/**
+ *
+ * @param {Object} ctx 上下文 用来修改 session
+ * @param {string} nickName 昵称
+ * @param {string} city 城市
+ * @param {string} picture 图片 rul
+ */
+async function changeUserInfo(ctx, { nickName, city, picture }) {
+    const { userName } = ctx.session.userInfo
+    if (!nickName) {
+        nickName = userName
+    }
+    const result = await updateUser(
+        {
+            newNickName: nickName,
+            newCity: city,
+            newPicture: picture,
+        },
+        { userName }
+    )
+    // 修改成功之后, 修改 session
+    if (result) {
+        Object.assign(ctx.session.userInfo, {
+            nickName,
+            city,
+            picture,
+        })
+        return new SuccessModel()
+    }
+    return new ErrorModel(changeInfoFailInfo)
+}
+
 module.exports = {
     isExist,
     register,
     login,
     deleteCurrentUser,
+    changeUserInfo,
 }

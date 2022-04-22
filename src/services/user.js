@@ -52,7 +52,7 @@ async function createUser({ userName, password, gender = 3, nickName }) {
 
 /**
  * 删除用户
- * @param {string} userName 
+ * @param {string} userName
  * @returns  number
  */
 async function deleteUser(userName) {
@@ -65,4 +65,48 @@ async function deleteUser(userName) {
     return result > 0
 }
 
-module.exports = { getUserInfo, createUser,deleteUser }
+/**
+ * 更新用户信息
+ * @param {Object} param0 需要修改的信息
+ * @param {Object} param1 查找项
+ */
+async function updateUser(
+    { newNickName, newPassword, newCity, newPicture },
+    { userName, password }
+) {
+    // 拼接更新数据
+    const updateData = {}
+    if (newNickName) {
+        updateData.nickName = newNickName
+    }
+    if (newPassword) {
+        updateData.password = newPassword
+    }
+    if (newCity) {
+        updateData.city = newCity
+    }
+    if (newPicture) {
+        updateData.picture = newPicture
+    }
+
+    // 拼接查询选项
+    const whereOption = {
+        userName,
+    }
+    if (password) {
+        whereOption.password = password
+    }
+
+    // 查询
+    const result = await User.update(updateData, {
+        where: whereOption,
+    })
+    return result[0] > 0
+}
+
+module.exports = {
+    getUserInfo,
+    createUser,
+    deleteUser,
+    updateUser
+}

@@ -8,6 +8,7 @@ const {
     register,
     login,
     deleteCurrentUser,
+    changeUserInfo,
 } = require("../../controller/user")
 const generateValidator = require("../../middlewares/validator")
 const { isTest } = require("../../utils/env")
@@ -42,5 +43,16 @@ router.post("/delete", loginCheck, async (ctx, next) => {
         ctx.body = await deleteCurrentUser(userName)
     }
 })
+
+// 修改用户信息
+router.patch(
+    "/changeInfo",
+    loginCheck,
+    generateValidator(userValidate),
+    async (ctx, next) => {
+        const { nickName, city, picture } = ctx.request.body
+        ctx.body = await changeUserInfo(ctx, { nickName, city, picture })
+    }
+)
 
 module.exports = router
