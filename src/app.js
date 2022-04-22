@@ -7,14 +7,17 @@ const bodyparser = require("koa-bodyparser")
 const logger = require("koa-logger")
 const session = require("koa-generic-session")
 const redisStore = require("koa-redis")
+const koaStatic = require("koa-static")
+const path = require("path")
 const { REDIS_CONF } = require("./conf/db")
 const { isProd } = require("./utils/env")
 
 // 路由
+const indexRouter = require("./routes/view/index")
 const userAPIRouter = require("./routes/api/user")
 const userViewRouter = require("./routes/view/user")
+const utilsAPIRouter = require("./routes/api/utils")
 const errorViewRouter = require("./routes/view/error")
-const indexRouter = require("./routes/view/index")
 const { SESSION_SECRET_KEY } = require("./conf/secret-keys")
 
 // error handler
@@ -34,7 +37,8 @@ app.use(
 )
 app.use(json())
 app.use(logger())
-app.use(require("koa-static")(__dirname + "/public"))
+app.use(koaStatic(__dirname + "/public"))
+app.use(koaStatic(path.join(__dirname, "../", "uploadFiles")))
 
 app.use(
     views(__dirname + "/views", {
@@ -61,6 +65,7 @@ app.use(
 
 // routes
 app.use(indexRouter.routes(), indexRouter.allowedMethods())
+app.use(utilsAPIRouter.routes(), utilsAPIRouter.allowedMethods())
 app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
 app.use(userAPIRouter.routes(), userAPIRouter.allowedMethods())
 // 404路由注册到最下面
