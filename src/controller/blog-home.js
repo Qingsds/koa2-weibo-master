@@ -6,6 +6,7 @@
 const { createBlogFailInfo } = require("../model/errorInfo")
 const { SuccessModel, ErrorModel } = require("../model/ResModel")
 const { createBlog } = require("../services/blog-home")
+const { filterXSS } = require("xss")
 
 /**
  *
@@ -17,7 +18,7 @@ async function create({ userId, content, image }) {
     try {
         const data = await createBlog({
             userId,
-            content,
+            content: filterXSS(content),
             image,
         })
         return new SuccessModel(data)
