@@ -19,7 +19,6 @@ test("创建一个微博, 结果应该成", async () => {
         .send(testData)
         .set("Cookie", COOKIE)
     expect(res.body.errno).toBe(0)
-    console.log(res.body.data)
     expect(res.body.data.content).toBe(content)
     expect(res.body.data.image).toBe(image)
 })
