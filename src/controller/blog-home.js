@@ -5,7 +5,7 @@
 
 const { createBlogFailInfo } = require("../model/errorInfo")
 const { SuccessModel, ErrorModel } = require("../model/ResModel")
-const { createBlog } = require("../services/blog-home")
+const { createBlog } = require("../services/blog")
 const { filterXSS } = require("xss")
 
 /**

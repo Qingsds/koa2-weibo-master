@@ -1,0 +1,68 @@
+<div class="margin-bottom-20">
+    <button
+        id="btn-load-more"
+        type="button"
+        class="btn btn-sm btn-lg btn-block"
+    >
+        点击加载更多
+    </button>
+</div>
+
+<script>
+      function ajaxFn(method, url, params, callback) {
+      $.ajax({
+        type: method.toUpperCase(),
+        url,
+        contentType: 'application/json;charset=UTF-8',
+        data: params ? JSON.stringify(params) : '',
+        success: function (res) {
+          console.log('now res', res);
+          if (res.errno !== 0) {
+            // 错误
+            callback(res.message);
+            return;
+          }
+          // 正确
+          callback(null, res.data);
+        },
+        error: function (error) {
+          // 错误
+          callback(error.message);
+        },
+      });
+    }
+    var PAGE_SIZE = <%= pageSize%>
+    var PAGE_INDEX =  <%= pageIndex%>
+    var COUNT =  <%= count%>
+    var $btnLoadMore = $('#btn-load-more')
+    var $containerWeiboList = $('<%= containerSelector%>')
+    var api = '<%= api%>'
+
+    // 加载更多
+    $btnLoadMore.click(function(){
+      var nextPageIndex = PAGE_INDEX + 1;
+      ajaxFn('get',api + '/' + nextPageIndex,null,function(err,data){
+            if (err) {
+                // 失败
+                alert(err)
+                return
+            }
+            // 更新 pageIndex
+            PAGE_INDEX = data.pageIndex
+            // 是否要隐藏“加载更多”
+            if ((PAGE_INDEX + 1) * PAGE_SIZE >= COUNT) {
+                $btnLoadMore.hide()
+            }
+            // 渲染页面
+            var $tempContainer = $(data.blogListTpl)
+            $tempContainer.each(function (index, item) {
+                if (item.nodeType !== 1) {
+                    // 不是 DOM 元素，是其他（如 #TEXT 类型）
+                    return
+                }
+                $containerWeiboList.append($(item))
+            })
+      })
+
+    })
+</script>
