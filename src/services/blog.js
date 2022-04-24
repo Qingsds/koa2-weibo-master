@@ -31,6 +31,7 @@ async function getBlogListByUser({ userName, pageIndex = 0, pageSize = 5 }) {
     if (userName) {
         userWhereOption.userName = userName
     }
+    console.log(pageIndex)
     const result = await Blog.findAndCountAll({
         limit: pageSize,
         offset: pageIndex * pageSize,
@@ -45,6 +46,7 @@ async function getBlogListByUser({ userName, pageIndex = 0, pageSize = 5 }) {
     /* result.count 总数, result.rows 返回结果数组 */
     const count = result.count
     let blogList = result.rows.map(value => value.dataValues)
+
     blogList = blogList.map(blog => {
         const user = blog.user.dataValues
         blog.user = formatUser(user)

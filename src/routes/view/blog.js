@@ -1,11 +1,11 @@
-const { getProfileBlogList } = require('../../controller/blog-profile')
-const { loginRedirect } = require('../../middlewares/loginChecks')
-
 /**
  * @description blog view 路由
  * @author qingsds
  */
 const router = require('koa-router')()
+const { getProfileBlogList } = require('../../controller/blog-profile')
+const { getSquareBlogList } = require('../../controller/blog-square')
+const { loginRedirect } = require('../../middlewares/loginChecks')
 
 router.get('/', async (ctx, next) => {
     await ctx.render('index', {})
@@ -35,6 +35,21 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
         userData: {
             userInfo,
             isMe: curUserName === userInfo.userName,
+        },
+    })
+})
+
+router.get('/square', loginRedirect, async (ctx, next) => {
+    const result = await getSquareBlogList()
+    const { isEmpty, blogList, count, pageSize, pageIndex } = result.data
+
+    await ctx.render('square', {
+        blogData: {
+            isEmpty,
+            blogList,
+            pageSize,
+            pageIndex,
+            count,
         },
     })
 })

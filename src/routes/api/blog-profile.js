@@ -20,7 +20,6 @@ router.get('/loadMore/:userName/:pageIndex', loginCheck, async (ctx, next) => {
 
     const blogList = result.data.blogList
     result.data.blogListTpl = getBlogListStr(blogList)
-    console.log(result);
     
     ctx.body = result
 })
