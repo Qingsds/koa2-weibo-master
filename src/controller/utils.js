@@ -2,14 +2,14 @@
  * @description utils controller
  * @author qingsds
  */
-const path = require("path")
-const fsExtra = require("fs-extra")
-const { ErrorModel, SuccessModel } = require("../model/ResModel")
-const { uploadFileFailInfo } = require("../model/errorInfo")
+const path = require('path')
+const fsExtra = require('fs-extra')
+const { ErrorModel, SuccessModel } = require('../model/ResModel')
+const { uploadFileFailInfo } = require('../model/errorInfo')
 
 // 1M
 const MAX_SIZE = 1024 * 1024 * 1024
-const DEST_FILES_PATH = path.join(__dirname, "..", "..", "uploadFiles")
+const DEST_FILES_PATH = path.join(__dirname, '..', '..', 'uploadFiles')
 
 // 判断文件夹是否存在
 fsExtra.pathExists(DEST_FILES_PATH).then(exist => {
@@ -34,12 +34,12 @@ async function saveFile({ name, filePath, size, type }) {
     }
 
     // 移动文件
-    const fileName = Date.now() + "." + name
+    const fileName = Date.now() + '.' + name
     const destFilePath = path.join(DEST_FILES_PATH, fileName)
     await fsExtra.move(filePath, destFilePath)
 
     return new SuccessModel({
-        url: "/" + fileName,
+        url: '/' + fileName,
     })
 }
 

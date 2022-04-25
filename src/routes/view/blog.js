@@ -5,6 +5,7 @@
 const router = require('koa-router')()
 const { getProfileBlogList } = require('../../controller/blog-profile')
 const { getSquareBlogList } = require('../../controller/blog-square')
+const { getFans } = require('../../controller/user-relation')
 const { loginRedirect } = require('../../middlewares/loginChecks')
 
 router.get('/', async (ctx, next) => {
@@ -19,11 +20,17 @@ router.get('/profile', loginRedirect, async (ctx, next) => {
 router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
     // 获取 url 中的 query 参数
     let { userName: curUserName } = ctx.params
-    const userInfo = ctx.session.userInfo
 
-    const result = await getProfileBlogList(curUserName, 0)
     // blogData
+    const result = await getProfileBlogList(curUserName, 0)
     const { isEmpty, blogList, count, pageSize, pageIndex } = result.data
+    // fansData
+    const userInfo = ctx.session.userInfo
+    const { id, userName } = ctx.session.userInfo
+    const isMe = userName === curUserName
+    const fansResult = await getFans(id)
+    const { fansCount, fansList } = fansResult.data
+
     await ctx.render('profile', {
         blogData: {
             isEmpty,
@@ -34,7 +41,11 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
         },
         userData: {
             userInfo,
-            isMe: curUserName === userInfo.userName,
+            isMe,
+            fansData: {
+                count: fansCount,
+                userList: fansList,
+            },
         },
     })
 })
