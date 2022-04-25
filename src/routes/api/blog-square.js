@@ -11,6 +11,7 @@ const router = require('koa-router')()
 
 router.prefix('/api/square')
 
+// 加载更多路由
 router.get('/loadMore/:pageIndex', loginRedirect, async (ctx, next) => {
     let { pageIndex } = ctx.params
     pageIndex = parseInt(pageIndex)

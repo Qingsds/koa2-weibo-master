@@ -5,6 +5,7 @@
 
 const { User, UserRelation } = require('../db/model/index')
 const { formatUser } = require('./_format')
+const sequelize = require('sequelize')
 
 /**
  * 根据被关注人 id 查找粉丝列表
@@ -33,6 +34,41 @@ async function getUsersByFollowerId(followerId) {
 }
 
 /**
+ * 根据用户 id 获取关注列表
+ * @param {number} userId 用户 id
+ * @returns Object
+ */
+async function getFollowersByUserId(userId) {
+    const result = await UserRelation.findAndCountAll({
+        include: {
+            model: User,
+            attributes: ['userName', 'nickName', 'picture', 'id'],
+        },
+        order: [['id', 'desc']],
+        where: {
+            userId,
+            followerId: {
+                // 剔除followerId = userId的情况
+                [sequelize.Op.ne]: userId,
+            },
+        },
+    })
+
+    // 处理数据
+    let followers = result.rows.map(row => row.dataValues)
+    followers = followers.map(item => {
+        let follower = item.user.dataValues
+        follower = formatUser(follower)
+        return follower
+    })
+
+    return {
+        followerCount: result.count,
+        followers,
+    }
+}
+
+/**
  * 添加用户关注关系
  * @param {number} userId 用户 id
  * @param {number} followerId 关注人 id
@@ -42,7 +78,7 @@ async function addFollowers(userId, followerId) {
         userId,
         followerId,
     })
-    
+
     return result.dataValues
 }
 
@@ -59,7 +95,7 @@ async function deleteFollower(userId, followerId) {
             followerId,
         },
     })
-    
+
     return result > 0
 }
 
@@ -67,4 +103,5 @@ module.exports = {
     getUsersByFollowerId,
     addFollowers,
     deleteFollower,
+    getFollowersByUserId,
 }
