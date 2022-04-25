@@ -31,7 +31,6 @@ async function getBlogListByUser({ userName, pageIndex = 0, pageSize = 5 }) {
     if (userName) {
         userWhereOption.userName = userName
     }
-    console.log(pageIndex)
     const result = await Blog.findAndCountAll({
         limit: pageSize,
         offset: pageIndex * pageSize,

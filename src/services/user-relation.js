@@ -25,13 +25,46 @@ async function getUsersByFollowerId(followerId) {
     // 处理数据
     let fansList = result.rows.map(row => row.dataValues)
     fansList = fansList.map(formatUser)
-    
+
     return {
         fansCount: result.count,
         fansList,
     }
 }
 
+/**
+ * 添加用户关注关系
+ * @param {number} userId 用户 id
+ * @param {number} followerId 关注人 id
+ */
+async function addFollowers(userId, followerId) {
+    const result = UserRelation.create({
+        userId,
+        followerId,
+    })
+    
+    return result.dataValues
+}
+
+/**
+ * 删除用户关注关系
+ * @param {number} userId 用户 id
+ * @param {number} followerId 关注人 id
+ * @returns boolean
+ */
+async function deleteFollower(userId, followerId) {
+    const result = await UserRelation.destroy({
+        where: {
+            userId,
+            followerId,
+        },
+    })
+    
+    return result > 0
+}
+
 module.exports = {
     getUsersByFollowerId,
+    addFollowers,
+    deleteFollower,
 }

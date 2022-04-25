@@ -17,7 +17,6 @@ const {
     getUserInfo,
     createUser,
     deleteUser,
-    update,
     updateUser,
 } = require("../services/user")
 const { doCrypto } = require("../utils/cryp")

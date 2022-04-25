@@ -7,6 +7,7 @@ const { getProfileBlogList } = require('../../controller/blog-profile')
 const { getSquareBlogList } = require('../../controller/blog-square')
 const { getFans } = require('../../controller/user-relation')
 const { loginRedirect } = require('../../middlewares/loginChecks')
+const { isExist } = require('../../controller/user')
 
 router.get('/', async (ctx, next) => {
     await ctx.render('index', {})
@@ -20,16 +21,31 @@ router.get('/profile', loginRedirect, async (ctx, next) => {
 router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
     // 获取 url 中的 query 参数
     let { userName: curUserName } = ctx.params
-
+    //  获取 session 中的用户信息
+    const myUserInfo = ctx.session.userInfo
+    const isMe = myUserInfo.userName === curUserName
+    // 判断当前的用户信息
+    let curUserInfo
+    if (isMe) {
+        curUserInfo = myUserInfo
+    } else {
+        const existResult = await isExist(curUserName)
+        if (existResult.errno === 0) {
+            curUserInfo = existResult.data
+        }
+    }
     // blogData
     const result = await getProfileBlogList(curUserName, 0)
     const { isEmpty, blogList, count, pageSize, pageIndex } = result.data
-    // fansData
-    const userInfo = ctx.session.userInfo
-    const { id, userName } = ctx.session.userInfo
-    const isMe = userName === curUserName
-    const fansResult = await getFans(id)
+
+    // fans data
+    const fansResult = await getFans(curUserInfo.id)
     const { fansCount, fansList } = fansResult.data
+
+    // 判断我有没有关注该用户, 遍历该用户的 fans 判断是否有 我 的名字
+    const amIFollowed = fansList.some(fans => {
+       return fans.userName === myUserInfo.userName
+    })
 
     await ctx.render('profile', {
         blogData: {
@@ -40,12 +56,13 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
             count,
         },
         userData: {
-            userInfo,
+            userInfo: curUserInfo,
             isMe,
             fansData: {
                 count: fansCount,
                 userList: fansList,
             },
+            amIFollowed,
         },
     })
 })

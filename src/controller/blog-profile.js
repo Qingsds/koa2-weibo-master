@@ -11,9 +11,9 @@ const { getBlogListByUser } = require('../services/blog')
  * @param {string} username 当前的用户名
  * @param {number} pageIndex 当前页
  */
-async function getProfileBlogList(username, pageIndex = 0) {
+async function getProfileBlogList(userName, pageIndex = 0) {
     const result = await getBlogListByUser({
-        username,
+        userName,
         pageIndex,
         pageSize: PAGE_SIZE,
     })
