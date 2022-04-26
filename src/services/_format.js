@@ -3,7 +3,7 @@
  * @author qingsds
  */
 
-const { DEFAULT_PICTURE } = require("../conf/constant")
+const { DEFAULT_PICTURE } = require('../conf/constant')
 
 /**
  * 用户默认头像
