@@ -4,7 +4,7 @@
  */
 
  const server = require('../server')
- const { COOKIE, USER_NAME } = require('../testUserInfo')
+ const { COOKIE } = require('../testUserInfo')
  
  test('测试广场页加载, 结果应该成功', async () => {
      const api = `/api/square/loadMore/0`

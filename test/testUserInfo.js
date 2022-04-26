@@ -8,9 +8,9 @@
  */
 module.exports = {
     USER_NAME: 'lisi',
-    USER_ID: 2,
+    USER_ID: 1,
     COOKIE: 'weibo.sid=5AS7JcuscpeV-yOS-ewGtHL2Z4AX7ehu; weibo.sid.sig=ZS0ec_vrspKL_SV4lh6iz7OYCmU',
     _USER_NAME: 'qingsds',
-    _USER_ID: 1,
-    _COOKIE: 'weibo.sid=55s0RHoqTVDtxM8C8aqt3q2betT3zmz4; weibo.sid.sig=G_FFQm2sftL_QuTsLNE2QwUkmE8',
+    _USER_ID: 2,
+    _COOKIE: 'weibo.sid=q_B_8AHLt8SGcC5hNnqdxBpGODYcFTIM; weibo.sid.sig=Cu8PMCJA2dHwJG3-1ITm-8YRJH0',
 }

@@ -10,7 +10,7 @@ const { loginRedirect } = require('../../middlewares/loginChecks')
 const { isExist } = require('../../controller/user')
 const { getHomeBlogList } = require('../../controller/blog-home')
 
-router.get('/', async (ctx, next) => {
+router.get('/', loginRedirect, async (ctx, next) => {
     // 获取个人信息
     const userInfo = ctx.session.userInfo
 
