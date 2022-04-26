@@ -8,9 +8,46 @@ const { getSquareBlogList } = require('../../controller/blog-square')
 const { getFans, getFollowers } = require('../../controller/user-relation')
 const { loginRedirect } = require('../../middlewares/loginChecks')
 const { isExist } = require('../../controller/user')
+const { getHomeBlogList } = require('../../controller/blog-home')
 
 router.get('/', async (ctx, next) => {
-    await ctx.render('index', {})
+    // 获取个人信息
+    const userInfo = ctx.session.userInfo
+
+    // 获取 fans 列表信息
+    const fansResult = await getFans(userInfo.id)
+    const { fansCount, fansList } = fansResult.data
+
+    // 获取 关注人 列表信息
+    const followerResult = await getFollowers(userInfo.id)
+    const { followerCount, followers } = followerResult.data
+
+    // 获取 blogList
+    const blogListResult = await getHomeBlogList(userInfo.id)
+    const { isEmpty, blogList, count, pageIndex, pageSize } =
+        blogListResult.data
+
+    // 渲染页面
+    await ctx.render('index', {
+        userData: {
+            userInfo,
+            fansData: {
+                count: fansCount,
+                list: fansList,
+            },
+            followersData: {
+                count: followerCount,
+                list: followers,
+            },
+        },
+        blogData: {
+            isEmpty,
+            blogList,
+            count,
+            pageIndex,
+            pageSize,
+        },
+    })
 })
 
 // 跳转个人主页

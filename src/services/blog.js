@@ -3,9 +3,8 @@
  * @author qingsds
  */
 
-const { Blog } = require('../db/model')
-const { User } = require('../db/model')
-const { formatUser } = require('../services/_format')
+const { Blog, User, UserRelation } = require('../db/model')
+const { formatUser, formatBlog } = require('../services/_format')
 
 /**
  * 创建博客
@@ -58,7 +57,46 @@ async function getBlogListByUser({ userName, pageIndex = 0, pageSize = 5 }) {
     }
 }
 
+/**
+ * 根据关注人获取博客列表
+ * @param {Object} param0 { userId, pageIndex, pageSize }
+ */
+async function getBlogListByFollowers({ userId, pageIndex = 0, pageSize = 5 }) {
+    const result = await Blog.findAndCountAll({
+        limit: pageSize,
+        offset: pageIndex * pageSize,
+        order: [['id', 'desc']],
+        include: [
+            {
+                model: User,
+                attributes: ['userName', 'nickName', 'picture'],
+            },
+            {
+                model: UserRelation,
+                attributes: ['userId', 'followerId'],
+                // 根据 userId 找到所有关注人的
+                where: {
+                    userId,
+                },
+            },
+        ],
+    })
+
+    let blogList = result.rows.map(row => row.dataValues)
+    blogList = blogList.map(item => {
+        const user = item.user.dataValues
+        item.user = formatUser(user)
+        return item
+    })
+    blogList = formatBlog(blogList)
+    return {
+        count: result.count,
+        blogList,
+    }
+}
+
 module.exports = {
     createBlog,
     getBlogListByUser,
+    getBlogListByFollowers,
 }

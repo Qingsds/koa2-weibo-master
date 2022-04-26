@@ -3,10 +3,11 @@
  * @author qingsds
  */
 
-const { createBlogFailInfo } = require("../model/errorInfo")
-const { SuccessModel, ErrorModel } = require("../model/ResModel")
-const { createBlog } = require("../services/blog")
-const { filterXSS } = require("xss")
+const { createBlogFailInfo } = require('../model/errorInfo')
+const { SuccessModel, ErrorModel } = require('../model/ResModel')
+const { createBlog, getBlogListByFollowers } = require('../services/blog')
+const { filterXSS } = require('xss')
+const { PAGE_SIZE } = require('../conf/constant')
 
 /**
  *
@@ -28,4 +29,28 @@ async function create({ userId, content, image }) {
     }
 }
 
-module.exports = { create }
+/**
+ * 获取主页博客列表
+ * @param {number} userId
+ * @param {number} pageIndex
+ */
+async function getHomeBlogList(userId, pageIndex = 0) {
+    const { blogList, count } = await getBlogListByFollowers({
+        userId,
+        pageIndex,
+        pageSize: PAGE_SIZE,
+    })
+
+    return new SuccessModel({
+        count,
+        blogList,
+        pageIndex,
+        pageSize: PAGE_SIZE,
+        isEmpty: blogList.length === 0,
+    })
+}
+
+module.exports = {
+    create,
+    getHomeBlogList,
+}

@@ -19,6 +19,9 @@ async function getUsersByFollowerId(followerId) {
             model: UserRelation,
             where: {
                 followerId,
+                userId: {
+                    [sequelize.Op.ne]: followerId,
+                },
             },
         },
     })

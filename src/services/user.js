@@ -3,8 +3,9 @@
  * @author qingsds
  */
 
-const { User } = require("../db/model/index")
-const { formatUser } = require("./_format")
+const { User } = require('../db/model/index')
+const { addFollowers } = require('./user-relation')
+const { formatUser } = require('./_format')
 
 /**
  * 获取用户信息
@@ -22,7 +23,7 @@ async function getUserInfo(userName, password) {
 
     // 查询
     const result = await User.findOne({
-        attributes: ["id", "userName", "nickName", "picture", "city"],
+        attributes: ['id', 'userName', 'nickName', 'picture', 'city'],
         where: whereOption,
     })
     if (result === null) {
@@ -47,7 +48,12 @@ async function createUser({ userName, password, gender = 3, nickName }) {
         nickName: nickName ? nickName : userName,
         gender,
     })
-    return result.dataValues
+    // 自己关注自己
+    const data = result.dataValues
+    const id = data.id
+    await addFollowers(id, id)
+
+    return data
 }
 
 /**
@@ -108,5 +114,5 @@ module.exports = {
     getUserInfo,
     createUser,
     deleteUser,
-    updateUser
+    updateUser,
 }
