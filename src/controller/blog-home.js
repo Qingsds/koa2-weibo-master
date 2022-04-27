@@ -9,7 +9,7 @@ const { createBlog, getBlogListByFollowers } = require('../services/blog')
 const { filterXSS } = require('xss')
 const { PAGE_SIZE, REG_FOR_AT_WHO } = require('../conf/constant')
 const { getUserInfo } = require('../services/user')
-const createAtRelation = require('../services/at-relation')
+const { createAtRelation } = require('../services/at-relation')
 
 /**
  *

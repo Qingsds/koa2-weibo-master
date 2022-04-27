@@ -19,4 +19,22 @@ async function createAtRelation(userId, blogId) {
     return result.dataValues
 }
 
-module.exports = createAtRelation
+/**
+ * 获取 被 at 的数量
+ * @param {number} userId
+ */
+async function getAtRelationCount(userId) {
+    const result = await AtRelation.findAndCountAll({
+        where: {
+            userId,
+            isRead: false,
+        },
+    })
+
+    return result.count
+}
+
+module.exports = {
+    createAtRelation,
+    getAtRelationCount
+}
