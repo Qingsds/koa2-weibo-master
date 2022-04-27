@@ -47,6 +47,15 @@ test('获取 lis 的关注人, 结果应该有 qingsds', async () => {
     expect(hasUserName).toBe(true)
 })
 
+test('获取 lis 的at 列表, 结果应该有 qingsds', async () => {
+    const res = await server.get('/api/user/getAtList').set('Cookie', COOKIE)
+    // 获取 at 列表
+    const atList = res.body
+    // 格式 nickName - userName
+    const hasUserName = atList.some(item => item.includes(`- ${_USER_NAME}`))
+    expect(hasUserName).toBe(true)
+})
+
 test('lis 取消关注 qingsds,结果应该成功', async () => {
     const res = await server
         .post('/api/profile/unFollow')
