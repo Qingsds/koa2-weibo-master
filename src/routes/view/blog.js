@@ -13,7 +13,6 @@ const { getHomeBlogList } = require('../../controller/blog-home')
 router.get('/', loginRedirect, async (ctx, next) => {
     // 获取个人信息
     const userInfo = ctx.session.userInfo
-
     // 获取 fans 列表信息
     const fansResult = await getFans(userInfo.id)
     const { fansCount, fansList } = fansResult.data
@@ -26,7 +25,6 @@ router.get('/', loginRedirect, async (ctx, next) => {
     const blogListResult = await getHomeBlogList(userInfo.id)
     const { isEmpty, blogList, count, pageIndex, pageSize } =
         blogListResult.data
-
     // 渲染页面
     await ctx.render('index', {
         userData: {

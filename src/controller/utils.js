@@ -37,7 +37,7 @@ async function saveFile({ name, filePath, size, type }) {
     const fileName = Date.now() + '.' + name
     const destFilePath = path.join(DEST_FILES_PATH, fileName)
     await fsExtra.move(filePath, destFilePath)
-
+    
     return new SuccessModel({
         url: '/' + fileName,
     })

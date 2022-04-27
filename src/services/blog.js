@@ -44,7 +44,7 @@ async function getBlogListByUser({ userName, pageIndex = 0, pageSize = 5 }) {
     /* result.count 总数, result.rows 返回结果数组 */
     const count = result.count
     let blogList = result.rows.map(value => value.dataValues)
-
+    blogList = formatBlog(blogList)
     blogList = blogList.map(blog => {
         const user = blog.user.dataValues
         blog.user = formatUser(user)
@@ -83,12 +83,12 @@ async function getBlogListByFollowers({ userId, pageIndex = 0, pageSize = 5 }) {
     })
 
     let blogList = result.rows.map(row => row.dataValues)
+    blogList = formatBlog(blogList)
     blogList = blogList.map(item => {
         const user = item.user.dataValues
         item.user = formatUser(user)
         return item
     })
-    blogList = formatBlog(blogList)
     return {
         count: result.count,
         blogList,
