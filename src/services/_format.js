@@ -41,7 +41,7 @@ function _formatContent(obj) {
             return `<a href="/profile/${userName}">@${nickName}</a>`
         }
     )
-    console.log(obj.formatContent)
+    
     return obj
 }
 

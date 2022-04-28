@@ -9,7 +9,11 @@ const { getFans, getFollowers } = require('../../controller/user-relation')
 const { loginRedirect } = require('../../middlewares/loginChecks')
 const { isExist } = require('../../controller/user')
 const { getHomeBlogList } = require('../../controller/blog-home')
-const { getAtMeCount, getAtMeBlogList } = require('../../controller/blog-atme')
+const {
+    getAtMeCount,
+    getAtMeBlogList,
+    markAsRead,
+} = require('../../controller/blog-atme')
 
 router.get('/', loginRedirect, async (ctx, next) => {
     // 获取个人信息
@@ -158,7 +162,9 @@ router.get('/at-me', loginRedirect, async (ctx, next) => {
         },
     })
     // 标记已读
-    if (atCount > 0) {}
+    if (atCount > 0) {
+        await markAsRead(userId)
+    }
 })
 
 module.exports = router

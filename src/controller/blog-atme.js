@@ -5,7 +5,11 @@
 
 const { PAGE_SIZE } = require('../conf/constant')
 const { SuccessModel } = require('../model/ResModel')
-const { getAtRelationCount, getAtUserBlogList } = require('../services/at-relation')
+const {
+    getAtRelationCount,
+    getAtUserBlogList,
+    updateAtRelation,
+} = require('../services/at-relation')
 
 /**
  * 获取 atMe 的数量
@@ -39,7 +43,28 @@ async function getAtMeBlogList(userId, pageIndex = 0) {
     })
 }
 
+/**
+ * 标记为已读
+ * @param {number} userId
+ */
+async function markAsRead(userId) {
+    try {
+        await updateAtRelation(
+            {
+                newIsRead: true,
+            },
+            {
+                userId,
+                isRead: false,
+            }
+        )
+    } catch (error) {
+        console.error(error.message, error.stack)
+    }
+}
+
 module.exports = {
     getAtMeCount,
     getAtMeBlogList,
+    markAsRead,
 }
