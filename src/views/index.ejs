@@ -33,7 +33,7 @@ true, isInputBlog: true})%>
             <!-- 个人信息 -->
             <div class="right-item">
                 <%- include('widgets/user-info', { userInfo: userData.userInfo,
-                isMe: true, amIFollowed: false });%>
+                isMe: true, amIFollowed: false ,atCount:userData.atCount});%>
             </div>
 
             <!-- 粉丝 -->
