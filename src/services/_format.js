@@ -12,10 +12,10 @@ const { timeFormat } = require('../utils/dataTime')
  * @returns obj
  */
 function _formatUserPicture(obj) {
-    if (obj.picture == null) {
-        obj.picture = DEFAULT_PICTURE
-    }
-    return obj
+  if (obj.picture == null) {
+    obj.picture = DEFAULT_PICTURE
+  }
+  return obj
 }
 
 /**
@@ -24,9 +24,9 @@ function _formatUserPicture(obj) {
  * @returns obj
  */
 function _formatDBTime(obj) {
-    obj.createdAtFormat = timeFormat(obj.createdAt)
-    obj.updatedAtFormat = timeFormat(obj.updatedAt)
-    return obj
+  obj.createdAtFormat = timeFormat(obj.createdAt)
+  obj.updatedAtFormat = timeFormat(obj.updatedAt)
+  return obj
 }
 
 /**
@@ -34,15 +34,15 @@ function _formatDBTime(obj) {
  * @param {Object} obj 数据对象
  */
 function _formatContent(obj) {
-    obj.formatContent = obj.content
-    obj.formatContent = obj.formatContent.replace(
-        REG_FOR_AT_WHO,
-        (matchStr, nickName, userName) => {
-            return `<a href="/profile/${userName}">@${nickName}</a>`
-        }
-    )
-    
-    return obj
+  obj.formatContent = obj.content
+  obj.formatContent = obj.formatContent.replace(
+    REG_FOR_AT_WHO,
+    (matchStr, nickName, userName) => {
+      return `<a href="/profile/${userName}">@${nickName}</a>`
+    }
+  )
+
+  return obj
 }
 
 /**
@@ -50,14 +50,14 @@ function _formatContent(obj) {
  * @param {Array|Object} list 用户列表或单个对象
  */
 function formatUser(list) {
-    if (list == null) {
-        return
-    }
-    if (Array.isArray(list)) {
-        return list.map(_formatUserPicture)
-    }
-    // 单个对象
-    return _formatUserPicture(list)
+  if (list == null) {
+    return
+  }
+  if (Array.isArray(list)) {
+    return list.map(_formatUserPicture)
+  }
+  // 单个对象
+  return _formatUserPicture(list)
 }
 
 /**
@@ -66,18 +66,18 @@ function formatUser(list) {
  * @returns list
  */
 function formatBlog(list) {
-    if (list == null) return list
-    // 批量处理
-    if (Array.isArray(list)) {
-        return list.map(_formatDBTime).map(_formatContent)
-    }
-    // 单个情况处理
-    let res = _formatDBTime(list)
-    res = _formatContent(res)
-    return res
+  if (list == null) return list
+  // 批量处理
+  if (Array.isArray(list)) {
+    return list.map(_formatDBTime).map(_formatContent)
+  }
+  // 单个情况处理
+  let res = _formatDBTime(list)
+  res = _formatContent(res)
+  return res
 }
 
 module.exports = {
-    formatUser,
-    formatBlog,
+  formatUser,
+  formatBlog,
 }

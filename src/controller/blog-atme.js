@@ -6,9 +6,9 @@
 const { PAGE_SIZE } = require('../conf/constant')
 const { SuccessModel } = require('../model/ResModel')
 const {
-    getAtRelationCount,
-    getAtUserBlogList,
-    updateAtRelation,
+  getAtRelationCount,
+  getAtUserBlogList,
+  updateAtRelation,
 } = require('../services/at-relation')
 
 /**
@@ -16,10 +16,10 @@ const {
  * @param {number} userId
  */
 async function getAtMeCount(userId) {
-    const atCount = await getAtRelationCount(userId)
-    return new SuccessModel({
-        atCount,
-    })
+  const atCount = await getAtRelationCount(userId)
+  return new SuccessModel({
+    atCount,
+  })
 }
 
 /**
@@ -28,19 +28,19 @@ async function getAtMeCount(userId) {
  * @param {number} pageIndex
  */
 async function getAtMeBlogList(userId, pageIndex = 0) {
-    const { blogList, count } = await getAtUserBlogList({
-        userId,
-        pageIndex,
-        pageSize: PAGE_SIZE,
-    })
+  const { blogList, count } = await getAtUserBlogList({
+    userId,
+    pageIndex,
+    pageSize: PAGE_SIZE,
+  })
 
-    return new SuccessModel({
-        count,
-        blogList,
-        pageIndex,
-        pageSize: PAGE_SIZE,
-        isEmpty: blogList.length === 0,
-    })
+  return new SuccessModel({
+    count,
+    blogList,
+    pageIndex,
+    pageSize: PAGE_SIZE,
+    isEmpty: blogList.length === 0,
+  })
 }
 
 /**
@@ -48,23 +48,23 @@ async function getAtMeBlogList(userId, pageIndex = 0) {
  * @param {number} userId
  */
 async function markAsRead(userId) {
-    try {
-        await updateAtRelation(
-            {
-                newIsRead: true,
-            },
-            {
-                userId,
-                isRead: false,
-            }
-        )
-    } catch (error) {
-        console.error(error.message, error.stack)
-    }
+  try {
+    await updateAtRelation(
+      {
+        newIsRead: true,
+      },
+      {
+        userId,
+        isRead: false,
+      }
+    )
+  } catch (error) {
+    console.error(error.message, error.stack)
+  }
 }
 
 module.exports = {
-    getAtMeCount,
-    getAtMeBlogList,
-    markAsRead,
+  getAtMeCount,
+  getAtMeBlogList,
+  markAsRead,
 }
